@@ -137,10 +137,10 @@ const InteractiveSkillMap = () => {
 
         {/* Node */}
         <motion.div
-          className={`relative cursor-pointer ${level === 0 ? 'mx-auto' : ''}`}
+          className={`relative cursor-pointer flex justify-center ${level === 0 ? 'mx-auto' : ''}`}
           style={{
-            marginLeft: level > 0 ? '200px' : '0',
-            marginTop: level > 0 ? '50px' : '0'
+            marginLeft: level > 0 ? '180px' : '0',
+            marginTop: level > 0 ? '60px' : '0'
           }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
@@ -150,27 +150,29 @@ const InteractiveSkillMap = () => {
           }}
         >
           <div
-            className={`w-32 h-32 rounded-full flex flex-col items-center justify-center transition-all duration-300 ${
+            className={`w-36 h-36 rounded-full flex flex-col items-center justify-center transition-all duration-300 ${
               isSelected
-                ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/50'
-                : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white shadow-lg hover:shadow-xl'
+                ? 'bg-gradient-to-br from-blue-600 to-blue-700 text-white shadow-xl shadow-blue-500/30'
+                : 'bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-700 text-gray-900 dark:text-white shadow-xl hover:shadow-2xl hover:from-gray-50 hover:to-gray-100 dark:hover:from-gray-700 dark:hover:to-gray-600'
             } border-4 ${
               level === 0 
-                ? 'border-yellow-400' 
+                ? 'border-yellow-400 shadow-yellow-400/20' 
                 : level === 1 
-                ? 'border-blue-400' 
-                : 'border-green-400'
+                ? 'border-blue-400 shadow-blue-400/20' 
+                : 'border-green-400 shadow-green-400/20'
             }`}
           >
-            <node.icon size={24} className="mb-1" />
-            <span className="text-xs font-semibold text-center px-2">{node.name}</span>
-            <div className="flex mt-1">
+            <node.icon size={28} className="mb-2" />
+            <span className="text-sm font-bold text-center px-3 leading-tight">{node.name}</span>
+            <div className="flex mt-2">
               {Array.from({ length: 5 }).map((_, i) => (
                 <div
                   key={i}
-                  className={`w-1.5 h-1.5 rounded-full mx-0.5 ${
+                  className={`w-2 h-2 rounded-full mx-0.5 ${
                     i < Math.floor(node.level / 2) 
                       ? 'bg-yellow-400' 
+                      : isSelected 
+                      ? 'bg-white/50' 
                       : 'bg-gray-300 dark:bg-gray-600'
                   }`}
                 />
@@ -180,10 +182,10 @@ const InteractiveSkillMap = () => {
 
           {/* Expand/Collapse Indicator */}
           {hasChildren && (
-            <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2">
+            <div className="absolute -bottom-3 left-1/2 transform -translate-x-1/2">
               <motion.div
                 animate={{ rotate: isExpanded ? 180 : 0 }}
-                className="w-6 h-6 bg-blue-600 rounded-full flex items-center justify-center text-white text-xs"
+                className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm shadow-lg hover:bg-blue-700 transition-colors duration-300"
               >
                 ▼
               </motion.div>
@@ -198,11 +200,11 @@ const InteractiveSkillMap = () => {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="mt-8"
+              className="mt-12"
             >
-              <div className="flex flex-wrap justify-center gap-8">
+              <div className="flex flex-wrap justify-center gap-12">
                 {node.children!.map((child, index) => (
-                  <div key={child.id} style={{ marginTop: index * 20 }}>
+                  <div key={child.id} style={{ marginTop: index * 30 }}>
                     {renderNode(child, level + 1, nodePosition)}
                   </div>
                 ))}
@@ -243,16 +245,16 @@ const InteractiveSkillMap = () => {
           </p>
         </motion.div>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        <div className="flex flex-col lg:flex-row gap-8 items-start">
           {/* Skill Tree */}
-          <div className="flex-1 overflow-x-auto">
-            <div className="min-w-max p-8">
+          <div className="flex-1 overflow-x-auto bg-white/50 dark:bg-gray-800/50 rounded-2xl p-6 backdrop-blur-sm border border-gray-200 dark:border-gray-700">
+            <div className="min-w-max p-4 flex justify-center">
               {renderNode(skillTree)}
             </div>
           </div>
 
           {/* Selected Node Details */}
-          <div className="lg:w-80">
+          <div className="lg:w-96 lg:sticky lg:top-8">
             <AnimatePresence mode="wait">
               {selectedNodeData && (
                 <motion.div
@@ -260,7 +262,7 @@ const InteractiveSkillMap = () => {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
-                  className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg sticky top-8"
+                  className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl border border-gray-200 dark:border-gray-700"
                 >
                   <div className="flex items-center mb-4">
                     <selectedNodeData.icon size={32} className="text-blue-600 mr-3" />
@@ -307,7 +309,7 @@ const InteractiveSkillMap = () => {
             </AnimatePresence>
 
             {!selectedNodeData && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg text-center">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl text-center border border-gray-200 dark:border-gray-700">
                 <Target size={48} className="text-gray-400 mx-auto mb-4" />
                 <p className="text-gray-500 dark:text-gray-400">
                   Klik pada node di skill map untuk melihat detail
